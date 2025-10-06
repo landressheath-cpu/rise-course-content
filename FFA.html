@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Objectives Interaction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom class for the initial hidden state */
+        .hidden-element {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="p-8 md:p-12 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Strategic Assessment Tools</h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8">Mastering Force Field & Quasi-Delphi Analysis</p>
+            <button id="begin-btn" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 transform hover:scale-105">
+                Begin
+            </button>
+        </div>
+
+        <!-- Objectives Screen -->
+        <div id="objectives-screen" class="p-8 md:p-12 hidden-element">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 text-center">What You'll Learn</h2>
+            <p class="text-gray-600 mb-8 text-center">Click on each objective below to reveal more information.</p>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8 text-center">
+                <!-- Objective 1: Define -->
+                <div id="box1" data-target="desc1" class="objective-box bg-gray-50 border-2 border-gray-200 p-6 rounded-xl cursor-pointer hover:bg-blue-100 hover:border-blue-400 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-gray-700">Define</h3>
+                </div>
+                <!-- Objective 2: Describe -->
+                <div id="box2" data-target="desc2" class="objective-box bg-gray-50 border-2 border-gray-200 p-6 rounded-xl cursor-pointer hover:bg-green-100 hover:border-green-400 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-gray-700">Describe</h3>
+                </div>
+                <!-- Objective 3: Synthesize -->
+                <div id="box3" data-target="desc3" class="objective-box bg-gray-50 border-2 border-gray-200 p-6 rounded-xl cursor-pointer hover:bg-purple-100 hover:border-purple-400 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-gray-700">Synthesize</h3>
+                </div>
+            </div>
+
+            <!-- Description Area -->
+            <div class="relative min-h-[120px] bg-gray-50 p-6 rounded-lg border">
+                <p id="initial-text" class="text-gray-500 italic">Descriptions will appear here...</p>
+                <div id="desc1" class="hidden-element fade-in">
+                    <h4 class="font-bold text-lg text-blue-800">Define the Core Concepts</h4>
+                    <p class="text-gray-700 mt-1">You will be able to clearly define what Force Field Analysis and the Quasi-Delphi Method are, and the specific contexts where each is most effective.</p>
+                </div>
+                <div id="desc2" class="hidden-element fade-in">
+                    <h4 class="font-bold text-lg text-green-800">Describe the Process</h4>
+                    <p class="text-gray-700 mt-1">You will be able to describe the step-by-step process for conducting both a Force Field Analysis and a Quasi-Delphi session from start to finish.</p>
+                </div>
+                <div id="desc3" class="hidden-element fade-in">
+                    <h4 class="font-bold text-lg text-purple-800">Synthesize for Impact</h4>
+                    <p class="text-gray-700 mt-1">You will be able to explain how to combine both methods into a powerful, unified strategy for a comprehensive and effective organizational assessment.</p>
+                </div>
+            </div>
+             <!-- Continue Button -->
+            <div class="text-center mt-8">
+                <button id="continue-btn" class="bg-gray-400 text-white font-bold py-3 px-8 rounded-lg cursor-not-allowed" disabled>
+                    Continue to Module 2
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get all the necessary elements from the DOM
+        const beginBtn = document.getElementById('begin-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const objectivesScreen = document.getElementById('objectives-screen');
+        const objectiveBoxes = document.querySelectorAll('.objective-box');
+        const descriptionElements = document.querySelectorAll('[id^="desc"]');
+        const initialText = document.getElementById('initial-text');
+        const continueBtn = document.getElementById('continue-btn');
+
+        // A set to keep track of which boxes have been clicked
+        const clickedBoxes = new Set();
+
+        // --- Event Listener for the "Begin" Button ---
+        beginBtn.addEventListener('click', () => {
+            // Hide the welcome screen
+            welcomeScreen.classList.add('hidden-element');
+            // Show the objectives screen
+            objectivesScreen.classList.remove('hidden-element');
+        });
+
+        // --- Event Listener for each Objective Box ---
+        objectiveBoxes.forEach(box => {
+            box.addEventListener('click', () => {
+                const targetId = box.dataset.target;
+                const targetDescription = document.getElementById(targetId);
+
+                // Hide the initial placeholder text
+                initialText.classList.add('hidden-element');
+
+                // Hide all other descriptions first
+                descriptionElements.forEach(desc => {
+                    desc.classList.add('hidden-element');
+                });
+
+                // Show the target description
+                if (targetDescription) {
+                    targetDescription.classList.remove('hidden-element');
+                }
+
+                // Mark the box as clicked and update its style
+                if (!box.classList.contains('border-4')) {
+                   // Reset styles on all boxes first
+                    objectiveBoxes.forEach(b => {
+                        b.classList.remove('border-4', 'scale-105');
+                        // Reset specific border colors
+                        b.classList.remove('border-blue-400', 'border-green-400', 'border-purple-400');
+                    });
+
+                    // Apply active style to the clicked box
+                    box.classList.add('border-4', 'scale-105');
+                    if(box.id === 'box1') box.classList.add('border-blue-400');
+                    if(box.id === 'box2') box.classList.add('border-green-400');
+                    if(box.id === 'box3') box.classList.add('border-purple-400');
+                }
+                
+                // Add this box to our set of clicked boxes
+                clickedBoxes.add(box.id);
+
+                // Check if all boxes have been clicked to enable the continue button
+                if (clickedBoxes.size === 3) {
+                    continueBtn.disabled = false;
+                    continueBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    continueBtn.classList.add('bg-green-600', 'hover:bg-green-700', 'transform', 'hover:scale-105');
+                }
+            });
+        });
+
+        // --- Event Listener for the "Continue" Button ---
+        continueBtn.addEventListener('click', () => {
+            if (!continueBtn.disabled) {
+                // In a real application, you would navigate to the next slide or page.
+                // For this example, we'll just show an alert.
+                alert('Proceeding to Module 2!');
+            }
+        });
+    </script>
+</body>
+</html>
+
